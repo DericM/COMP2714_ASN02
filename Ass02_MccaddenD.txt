@@ -96,7 +96,7 @@ Grosvenor Inn    123 Granville Street, Vancouver                   1 2016-01-19
 
 7 rows selected.
 
-SQL> --AND	 b.dateTo = NULL;
+SQL> --AND	 b.dateTo = NULL;				    ----------------------**error
 SQL> --
 SQL> --Q3--------------------------------------------------------
 SQL> --
@@ -128,24 +128,36 @@ SQL> SELECT    h.hotelName, SUM(r.price) AS Revenue
   4  AND       h.hotelNo = r.hotelNo
   5  AND       b.roomNo = r.roomNo
   6  GROUP BY  h.hotelName
-  7  ORDER BY  h.hotelName;
+  7  HAVING    SUM(r.price) >= 500
+  8  AND       SUM(r.price) <= 1000
+  9  ORDER BY  h.hotelName;
 
 HOTELNAME           REVENUE                                                     
 ---------------- ----------                                                     
-Delta Inn               150                                                     
-Grosvenor Hotel         475                                                     
-Grosvenor Inn           295                                                     
-Holiday Inn              85                                                     
-Imperial Palace         290                                                     
-Meridian Hotel          240                                                     
-Park Royal Hotel        144                                                     
 The Ramada              500                                                     
-
-8 rows selected.
 
 SQL> --
 SQL> --Q5--------------------------------------------------------
 SQL> --
+SQL> SELECT    h.hotelName, r.type, r.price, COUNT(r.type)
+  2  FROM      Hotel h, Room r
+  3  WHERE     h.hotelNo = r.hotelNo
+  4  AND       h.hotelName LIKE '%Grosvenor%'
+  5  GROUP BY  h.hotelName, r.type, price
+  6  HAVING    COUNT(r.type) > 3
+  7  ORDER BY  h.hotelName;
+
+HOTELNAME        TYPE          PRICE COUNT(R.TYPE)                              
+---------------- -------- ---------- -------------                              
+Grosvenor Hotel  Double           55             4                              
+Grosvenor Hotel  Single           40             4                              
+Grosvenor Inn    Deluxe          155             5                              
+Grosvenor Inn    Double           95             5                              
+Grosvenor Inn    Family          125             5                              
+Grosvenor Inn    Single           45             5                              
+
+6 rows selected.
+
 SQL> --
 SQL> --Q6--------------------------------------------------------
 SQL> --
@@ -155,6 +167,21 @@ SQL> --
 SQL> --
 SQL> --Q8--------------------------------------------------------
 SQL> --
+SQL> SELECT    r.type, SUM(r.price)
+  2  FROM      Booking b, Hotel h, Room r
+  3  WHERE     b.hotelNo = h.HotelNo
+  4  AND       h.hotelNo = r.hotelNo
+  5  AND       b.roomNo = r.roomNo
+  6  AND       b.datefrom <= DATE'2016-02-01'
+  7  AND       (b.dateTo IS NULL OR dateTo >= Date'2016-02-01')
+  8  GROUP BY  r.type;
+
+TYPE     SUM(R.PRICE)                                                           
+-------- ------------                                                           
+Single            208                                                           
+Deluxe            150                                                           
+Double            205                                                           
+
 SQL> --
 SQL> --Q9--------------------------------------------------------
 SQL> --

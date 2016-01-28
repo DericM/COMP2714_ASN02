@@ -53,23 +53,25 @@ ORDER BY  h.hotelName;
 --
 --Q4--------------------------------------------------------
 --
-SELECT    h.hotelName, SUM(r.price) AS Revenue ----------------------****how do you make my sum 500 to 1000
+SELECT    h.hotelName, SUM(r.price) AS Revenue 
 FROM      Booking b, Hotel h, Room r
 WHERE     b.hotelNo = h.hotelNo
 AND       h.hotelNo = r.hotelNo
 AND       b.roomNo = r.roomNo
 GROUP BY  h.hotelName
+HAVING    SUM(r.price) >= 500
+AND       SUM(r.price) <= 1000
 ORDER BY  h.hotelName;
 --
 --Q5--------------------------------------------------------
 --
-SELECT    h.hotelName, h.hotelAddress, r.type, r.price
+SELECT    h.hotelName, r.type, r.price, COUNT(r.type)
 FROM      Hotel h, Room r
 WHERE     h.hotelNo = r.hotelNo
-AND       h.hotelAddress LIKE '%London%'
-AND       (r.type = 'Single' OR r.type = 'Double' OR r.type = 'Family')
-AND       r.price < 100
-ORDER BY  h.hotelName DESC, r.price ASC, r.type DESC;
+AND       h.hotelName LIKE '%Grosvenor%'
+GROUP BY  h.hotelName, r.type, price
+HAVING    COUNT(r.type) > 3
+ORDER BY  h.hotelName;
 --
 --Q6--------------------------------------------------------
 --
@@ -79,6 +81,14 @@ ORDER BY  h.hotelName DESC, r.price ASC, r.type DESC;
 --
 --Q8--------------------------------------------------------
 --
+SELECT    r.type, SUM(r.price)
+FROM      Booking b, Hotel h, Room r
+WHERE     b.hotelNo = h.HotelNo
+AND       h.hotelNo = r.hotelNo
+AND       b.roomNo = r.roomNo
+AND       b.datefrom <= DATE'2016-02-01'
+AND       (b.dateTo IS NULL OR dateTo >= Date'2016-02-01')
+GROUP BY  r.type;
 --
 --Q9--------------------------------------------------------
 --
