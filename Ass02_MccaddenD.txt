@@ -1,0 +1,167 @@
+SQL> --
+SQL> -- ---------------------------------------------------------
+SQL> --
+SQL> --  COMP 2714
+SQL> --  SET 2D
+SQL> --  Assignment Asn02
+SQL> --  Mccadden, Deric    A00751277
+SQL> --  email: dmccadden@my.bcit.ca
+SQL> --
+SQL> -- ---------------------------------------------------------
+SQL> --  ASSIGNMENT
+SQL> --  START C:\Users\Deric\workspace\COMP2714_ASS02\Ass02_MccaddenD.sql
+SQL> --  LOAD DATABASE
+SQL> --  START C:\Users\Deric\workspace\COMP2714_ASS02\Asn2SetupHotels.sql
+SQL> -- ---------------------------------------------------------
+SQL> --
+SQL> ALTER SESSION SET NLS_DATE_FORMAT='YYYY-MM-DD';
+
+Session altered.
+
+SQL> --
+SQL> SELECT SYSDATE
+  2  FROM DUAL;
+
+SYSDATE                                                                         
+----------                                                                      
+2016-01-28                                                                      
+
+SQL> --
+SQL> --Q1--------------------------------------------------------
+SQL> --
+SQL> SELECT    DISTINCT h.hotelName, h.hotelAddress, r.type, r.price
+  2  FROM      Hotel h, Room r
+  3  WHERE     h.hotelNo = r.hotelNo
+  4  AND       h.hotelAddress LIKE '%London%'
+  5  AND       (r.type = 'Single' OR r.type = 'Double' OR r.type = 'Family')
+  6  AND       r.price < 100
+  7  ORDER BY  h.hotelName DESC, r.price ASC, r.type DESC;
+
+HOTELNAME        HOTELADDRESS                             TYPE          PRICE   
+---------------- ---------------------------------------- -------- ----------   
+Holiday Inn      56 Edinburg Square, London               Single           35   
+Holiday Inn      56 Edinburg Square, London               Double           50   
+Grosvenor Hotel  100 Oxford Road, London                  Single           40   
+Grosvenor Hotel  100 Oxford Road, London                  Double           55   
+Grosvenor Hotel  100 Oxford Road, London                  Family           85   
+Grosvenor Hotel  100 Oxford Road, London                  Family           90   
+
+6 rows selected.
+
+SQL> --
+SQL> --Q2--------------------------------------------------------
+SQL> --
+SQL> SELECT    h.hotelName, h.hotelAddress, b.roomNo, b.dateFrom, b.dateTo
+  2  FROM      Booking b, Hotel h
+  3  WHERE     b.hotelNo = h.hotelNo
+  4  AND       h.hotelAddress LIKE '%Vancouver%'
+  5  AND       h.hotelAddress NOT LIKE '%North Vancouver%'
+  6  AND       h.hotelAddress NOT LIKE '%West Vancouver%';
+
+HOTELNAME        HOTELADDRESS                                 ROOMNO DATEFROM   
+---------------- ---------------------------------------- ---------- ---------- 
+DATETO                                                                          
+----------                                                                      
+Meridian Hotel   789 Howe Street, Vancouver                        9 2016-01-21 
+2016-01-23                                                                      
+                                                                                
+Meridian Hotel   789 Howe Street, Vancouver                       10 2016-01-21 
+                                                                                
+                                                                                
+Delta Inn        900 Burrard Street, Vancouver                     1 2016-02-28 
+2016-03-05                                                                      
+                                                                                
+
+HOTELNAME        HOTELADDRESS                                 ROOMNO DATEFROM   
+---------------- ---------------------------------------- ---------- ---------- 
+DATETO                                                                          
+----------                                                                      
+Delta Inn        900 Burrard Street, Vancouver                     2 2016-02-02 
+2016-02-04                                                                      
+                                                                                
+Grosvenor Inn    123 Granville Street, Vancouver                  15 2016-02-03 
+2016-03-26                                                                      
+                                                                                
+Grosvenor Inn    123 Granville Street, Vancouver                  20 2016-02-01 
+2016-03-07                                                                      
+                                                                                
+
+HOTELNAME        HOTELADDRESS                                 ROOMNO DATEFROM   
+---------------- ---------------------------------------- ---------- ---------- 
+DATETO                                                                          
+----------                                                                      
+Grosvenor Inn    123 Granville Street, Vancouver                   1 2016-01-19 
+2016-02-28                                                                      
+                                                                                
+
+7 rows selected.
+
+SQL> --AND	 b.dateTo = NULL;
+SQL> --
+SQL> --Q3--------------------------------------------------------
+SQL> --
+SQL> SELECT    h.hotelName, AVG(r.price) AS Average
+  2  FROM      Hotel h, Room r
+  3  WHERE     h.hotelNo = r.hotelNo
+  4  GROUP BY  h.hotelName
+  5  ORDER BY  h.hotelName;
+
+HOTELNAME           AVERAGE                                                     
+---------------- ----------                                                     
+Delta Inn                75                                                     
+Grosvenor Hotel  69.6153846                                                     
+Grosvenor Inn           105                                                     
+Holiday Inn      41.4285714                                                     
+Imperial Palace         115                                                     
+Meridian Hotel   100.833333                                                     
+Park Royal Hotel         67                                                     
+The Ramada            162.5                                                     
+
+8 rows selected.
+
+SQL> --
+SQL> --Q4--------------------------------------------------------
+SQL> --
+SQL> SELECT    h.hotelName, SUM(r.price) AS Revenue
+  2  FROM      Booking b, Hotel h, Room r
+  3  WHERE     b.hotelNo = h.hotelNo
+  4  AND       h.hotelNo = r.hotelNo
+  5  AND       b.roomNo = r.roomNo
+  6  GROUP BY  h.hotelName
+  7  ORDER BY  h.hotelName;
+
+HOTELNAME           REVENUE                                                     
+---------------- ----------                                                     
+Delta Inn               150                                                     
+Grosvenor Hotel         475                                                     
+Grosvenor Inn           295                                                     
+Holiday Inn              85                                                     
+Imperial Palace         290                                                     
+Meridian Hotel          240                                                     
+Park Royal Hotel        144                                                     
+The Ramada              500                                                     
+
+8 rows selected.
+
+SQL> --
+SQL> --Q5--------------------------------------------------------
+SQL> --
+SQL> --
+SQL> --Q6--------------------------------------------------------
+SQL> --
+SQL> --
+SQL> --Q7--------------------------------------------------------
+SQL> --
+SQL> --
+SQL> --Q8--------------------------------------------------------
+SQL> --
+SQL> --
+SQL> --Q9--------------------------------------------------------
+SQL> --
+SQL> --
+SQL> --Q10--------------------------------------------------------
+SQL> --
+SQL> --
+SQL> -------------------------------------------------------------
+SQL> --
+SQL> SPOOL OFF
