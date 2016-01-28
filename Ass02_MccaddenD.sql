@@ -40,8 +40,8 @@ FROM      Booking b, Hotel h
 WHERE     b.hotelNo = h.hotelNo
 AND       h.hotelAddress LIKE '%Vancouver%'
 AND       h.hotelAddress NOT LIKE '%North Vancouver%'
-AND       h.hotelAddress NOT LIKE '%West Vancouver%';
---AND       b.dateTo = NULL;                                   ----------------------**error
+AND       h.hotelAddress NOT LIKE '%West Vancouver%'
+AND       b.dateTo IS NULL;
 --
 --Q3--------------------------------------------------------
 --

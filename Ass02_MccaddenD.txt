@@ -56,47 +56,17 @@ SQL> SELECT    h.hotelName, h.hotelAddress, b.roomNo, b.dateFrom, b.dateTo
   3  WHERE     b.hotelNo = h.hotelNo
   4  AND       h.hotelAddress LIKE '%Vancouver%'
   5  AND       h.hotelAddress NOT LIKE '%North Vancouver%'
-  6  AND       h.hotelAddress NOT LIKE '%West Vancouver%';
+  6  AND       h.hotelAddress NOT LIKE '%West Vancouver%'
+  7  AND       b.dateTo IS NULL;
 
 HOTELNAME        HOTELADDRESS                                 ROOMNO DATEFROM   
 ---------------- ---------------------------------------- ---------- ---------- 
 DATETO                                                                          
 ----------                                                                      
-Meridian Hotel   789 Howe Street, Vancouver                        9 2016-01-21 
-2016-01-23                                                                      
-                                                                                
 Meridian Hotel   789 Howe Street, Vancouver                       10 2016-01-21 
                                                                                 
                                                                                 
-Delta Inn        900 Burrard Street, Vancouver                     1 2016-02-28 
-2016-03-05                                                                      
-                                                                                
 
-HOTELNAME        HOTELADDRESS                                 ROOMNO DATEFROM   
----------------- ---------------------------------------- ---------- ---------- 
-DATETO                                                                          
-----------                                                                      
-Delta Inn        900 Burrard Street, Vancouver                     2 2016-02-02 
-2016-02-04                                                                      
-                                                                                
-Grosvenor Inn    123 Granville Street, Vancouver                  15 2016-02-03 
-2016-03-26                                                                      
-                                                                                
-Grosvenor Inn    123 Granville Street, Vancouver                  20 2016-02-01 
-2016-03-07                                                                      
-                                                                                
-
-HOTELNAME        HOTELADDRESS                                 ROOMNO DATEFROM   
----------------- ---------------------------------------- ---------- ---------- 
-DATETO                                                                          
-----------                                                                      
-Grosvenor Inn    123 Granville Street, Vancouver                   1 2016-01-19 
-2016-02-28                                                                      
-                                                                                
-
-7 rows selected.
-
-SQL> --AND	 b.dateTo = NULL;				    ----------------------**error
 SQL> --
 SQL> --Q3--------------------------------------------------------
 SQL> --
