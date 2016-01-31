@@ -65,7 +65,7 @@ ORDER BY  h.hotelName;
 --
 --Q5--------------------------------------------------------
 --
-SELECT    h.hotelName, r.type, r.price, COUNT(r.type)
+SELECT    h.hotelName, r.type, r.price, COUNT(r.type) Available
 FROM      Hotel h, Room r
 WHERE     h.hotelNo = r.hotelNo
 AND       h.hotelName LIKE '%Grosvenor%'
@@ -75,26 +75,56 @@ ORDER BY  h.hotelName;
 --
 --Q6--------------------------------------------------------
 --
+SELECT    g.guestName, b.roomNo
+FROM      Booking b, Guest g
+WHERE     b.guestNo = g.guestNo
+AND       b.dateFrom < DATE '2016-02-01'
+AND       (b.dateTo IS NULL OR dateTo >= Date'2016-02-01');
 --
 --Q7--------------------------------------------------------
 --
+SELECT    SUM(r.price) TotalIncome
+FROM      Booking b, Hotel h, Room r    
+WHERE     b.hotelNo = h.hotelNo
+AND       h.hotelNo = r.hotelNo
+AND       b.roomNo = r.roomNo
+AND       h.hotelName LIKE '%Grosvenor%'
+AND       b.datefrom <= DATE'2016-02-01'
+AND       (b.dateTo IS NULL OR dateTo >= Date'2016-02-01');
 --
 --Q8--------------------------------------------------------
 --
-SELECT    r.type, SUM(r.price)
+SELECT    h.hotelName, r.type, SUM(r.price)
 FROM      Booking b, Hotel h, Room r
-WHERE     b.hotelNo = h.HotelNo
+WHERE     b.hotelNo = h.hotelNo
 AND       h.hotelNo = r.hotelNo
 AND       b.roomNo = r.roomNo
 AND       b.datefrom <= DATE'2016-02-01'
 AND       (b.dateTo IS NULL OR dateTo >= Date'2016-02-01')
-GROUP BY  r.type;
+GROUP BY  h.hotelName, r.type
+ORDER BY  h.hotelName ASC, r.type ASC;
 --
 --Q9--------------------------------------------------------
 --
+SELECT    h.hotelName
+FROM      Hotel h 
+          LEFT JOIN Room r
+               ON h.hotelNo = r.hotelNo
+GROUP BY  h.hotelName
+HAVING    COUNT (r.hotelNo) = 0;
 --
 --Q10--------------------------------------------------------
 --
+SELECT     COUNT  (DISTINCT h.hotelNo)            NumberOfHotels,
+           COUNT  (DISTINCT r.hotelNo)            CompletedHotels, 
+          (COUNT  (DISTINCT h.hotelNo)) 
+                  - (COUNT (DISTINCT r.hotelNo))  Construction, 
+         ((COUNT  (DISTINCT h.hotelNo)) 
+                  - (COUNT (DISTINCT r.hotelNo))) 
+                  / (COUNT (DISTINCT h.hotelNo)) 
+                  * 100                           PercentConst
+FROM      Hotel h, Room r
+WHERE     h.hotelNo = r.hotelNo(+);
 --
 -------------------------------------------------------------
 --

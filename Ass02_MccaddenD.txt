@@ -109,7 +109,7 @@ The Ramada              500
 SQL> --
 SQL> --Q5--------------------------------------------------------
 SQL> --
-SQL> SELECT    h.hotelName, r.type, r.price, COUNT(r.type)
+SQL> SELECT    h.hotelName, r.type, r.price, COUNT(r.type) Available
   2  FROM      Hotel h, Room r
   3  WHERE     h.hotelNo = r.hotelNo
   4  AND       h.hotelName LIKE '%Grosvenor%'
@@ -117,47 +117,113 @@ SQL> SELECT    h.hotelName, r.type, r.price, COUNT(r.type)
   6  HAVING    COUNT(r.type) > 3
   7  ORDER BY  h.hotelName;
 
-HOTELNAME        TYPE          PRICE COUNT(R.TYPE)                              
----------------- -------- ---------- -------------                              
-Grosvenor Hotel  Double           55             4                              
-Grosvenor Hotel  Single           40             4                              
-Grosvenor Inn    Deluxe          155             5                              
-Grosvenor Inn    Double           95             5                              
-Grosvenor Inn    Family          125             5                              
-Grosvenor Inn    Single           45             5                              
+HOTELNAME        TYPE          PRICE  AVAILABLE                                 
+---------------- -------- ---------- ----------                                 
+Grosvenor Hotel  Double           55          4                                 
+Grosvenor Hotel  Single           40          4                                 
+Grosvenor Inn    Deluxe          155          5                                 
+Grosvenor Inn    Double           95          5                                 
+Grosvenor Inn    Family          125          5                                 
+Grosvenor Inn    Single           45          5                                 
 
 6 rows selected.
 
 SQL> --
 SQL> --Q6--------------------------------------------------------
 SQL> --
+SQL> SELECT    g.guestName, b.roomNo
+  2  FROM      Booking b, Guest g
+  3  WHERE     b.guestNo = g.guestNo
+  4  AND       b.dateFrom < DATE '2016-02-01'
+  5  AND       (b.dateTo IS NULL OR dateTo >= Date'2016-02-01');
+
+GUESTNAME           ROOMNO                                                      
+--------------- ----------                                                      
+Tony Saunders            5                                                      
+Ed Cunningham            3                                                      
+Rick Hamilton            1                                                      
+Floyd Mann              10                                                      
+Peter Kennedy            5                                                      
+Sundeep Mohan            4                                                      
+Eileen Reynolds          7                                                      
+Ivan Pratt               3                                                      
+
+8 rows selected.
+
 SQL> --
 SQL> --Q7--------------------------------------------------------
 SQL> --
+SQL> SELECT    SUM(r.price) TotalIncome
+  2  FROM      Booking b, Hotel h, Room r
+  3  WHERE     b.hotelNo = h.hotelNo
+  4  AND       h.hotelNo = r.hotelNo
+  5  AND       b.roomNo = r.roomNo
+  6  AND       h.hotelName LIKE '%Grosvenor%'
+  7  AND       b.datefrom <= DATE'2016-02-01'
+  8  AND       (b.dateTo IS NULL OR dateTo >= Date'2016-02-01');
+
+TOTALINCOME                                                                     
+-----------                                                                     
+        330                                                                     
+
 SQL> --
 SQL> --Q8--------------------------------------------------------
 SQL> --
-SQL> SELECT    r.type, SUM(r.price)
+SQL> SELECT    h.hotelName, r.type, SUM(r.price)
   2  FROM      Booking b, Hotel h, Room r
-  3  WHERE     b.hotelNo = h.HotelNo
+  3  WHERE     b.hotelNo = h.hotelNo
   4  AND       h.hotelNo = r.hotelNo
   5  AND       b.roomNo = r.roomNo
   6  AND       b.datefrom <= DATE'2016-02-01'
   7  AND       (b.dateTo IS NULL OR dateTo >= Date'2016-02-01')
-  8  GROUP BY  r.type;
+  8  GROUP BY  h.hotelName, r.type
+  9  ORDER BY  h.hotelName ASC, r.type ASC;
 
-TYPE     SUM(R.PRICE)                                                           
--------- ------------                                                           
-Single            208                                                           
-Deluxe            150                                                           
-Double            205                                                           
+HOTELNAME        TYPE     SUM(R.PRICE)                                          
+---------------- -------- ------------                                          
+Grosvenor Hotel  Double            110                                          
+Grosvenor Hotel  Single             80                                          
+Grosvenor Inn    Double             95                                          
+Grosvenor Inn    Single             45                                          
+Holiday Inn      Single             35                                          
+Meridian Hotel   Deluxe            150                                          
+Park Royal Hotel Single             48                                          
+
+7 rows selected.
 
 SQL> --
 SQL> --Q9--------------------------------------------------------
 SQL> --
+SQL> SELECT    h.hotelName
+  2  FROM      Hotel h
+  3  	       LEFT JOIN Room r
+  4  		    ON h.hotelNo = r.hotelNo
+  5  GROUP BY  h.hotelName
+  6  HAVING    COUNT (r.hotelNo) = 0;
+
+HOTELNAME                                                                       
+----------------                                                                
+Olympic Resort                                                                  
+Royale London                                                                   
+
 SQL> --
 SQL> --Q10--------------------------------------------------------
 SQL> --
+SQL> SELECT	COUNT  (DISTINCT h.hotelNo)	       NumberOfHotels,
+  2  		COUNT  (DISTINCT r.hotelNo)	       CompletedHotels,
+  3  	       (COUNT  (DISTINCT h.hotelNo))
+  4  		       - (COUNT (DISTINCT r.hotelNo))  Construction,
+  5  	      ((COUNT  (DISTINCT h.hotelNo))
+  6  		       - (COUNT (DISTINCT r.hotelNo)))
+  7  		       / (COUNT (DISTINCT h.hotelNo))
+  8  		       * 100			       PercentConst
+  9  FROM      Hotel h, Room r
+ 10  WHERE     h.hotelNo = r.hotelNo(+);
+
+NUMBEROFHOTELS COMPLETEDHOTELS CONSTRUCTION PERCENTCONST                        
+-------------- --------------- ------------ ------------                        
+            10               8            2           20                        
+
 SQL> --
 SQL> -------------------------------------------------------------
 SQL> --
